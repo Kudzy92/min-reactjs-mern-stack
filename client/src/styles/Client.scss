@@ -1,0 +1,36 @@
+.action-btn-container{
+
+    display: flex;
+    justify-content: space-between;
+    gap:1rem;
+    align-items: center;
+    padding:2rem 0;
+   .section-heading{
+   
+       h3{
+           font-size: 1.7rem;
+           font-weight: 300;
+           color:var(--black);
+           letter-spacing: 1px;
+           text-transform: uppercase;
+       }
+   }
+      .section-action{
+       display: flex;
+    justify-content: flex-end;
+    gap:1rem;
+    align-items: center;
+       .action-btn{
+           
+       }
+       .action-btn.active{}
+       .action-btn:hover{}
+   
+   }
+       
+     }
+     .client-content{
+        padding:2rem 0;
+
+        .client-content-item.active{position:relative;}
+     }
