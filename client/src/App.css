@@ -66,6 +66,12 @@ p{
   background:var(--theme-color-1);
   color: var(--white);
 }
+.loading.action-btn>svg{
+  -webkit-animation:spin 1.2s linear infinite;
+    -moz-animation:spin 1.2s linear infinite;
+    animation:spin 1.2s linear infinite;
+}
+.loading{pointer-events: none;}
 .btn.cancel{background:var(--theme-color-1);width: fit-content;;color: var(--white);}
 .btn.cancel:hover{background:var(--white);color:var(--theme-color-1);}
 .btn.save{
@@ -547,6 +553,9 @@ color:var(--white);
   }
 	
   @media (max-width: 992px) {
+    .grid-wrapper {
+      grid-template-columns: repeat(2,1fr);
+      }
     html {
   font-size: 75.5%;
     }
@@ -585,6 +594,9 @@ grid-template-columns: repeat(1,1fr);
 }
 }
 @media (max-width: 600px) {
+  .grid-wrapper {
+    grid-template-columns: repeat(2,1fr);
+    }
   .section-title-wrapper h1.title::before,
   .section-title-wrapper h1.title::after{
    width:7rem;
@@ -600,6 +612,8 @@ grid-template-columns: repeat(1,1fr);
 }
 }
 @media (max-width: 500px) {
+  .section-title-wrapper h1.title{    font-size: 1.4rem;}
+  .tb-content td:nth-child(4), .tb-content th:nth-child(4){display:none;}
    .section-title-wrapper h1.title::before,
    .section-title-wrapper h1.title::after{
     width:5rem;

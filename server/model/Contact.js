@@ -1,21 +1,28 @@
-import mongoose from "mongoose"
-const ContactSchema = new mangoose.Schema({
+const mongoose=require("mongoose");
+const ContactSchema = new mongoose.Schema({
     name:{
-        name:String,
+        type:String,
         required:true,
         maxlength:60,
     },
     surname:{
-        surname:String,
+        type:String,
         required:true,
         maxlength:60,
     },
     email:{
-        email:String,
+        type:String,
         required:true,
         maxlength:200,
+    },
+    linkedcount:{
+        type:Number,
+        required:true,
+        maxlength:10,
     },
     
 },{ timestamps: true });
 
-export default mongoose.models.Contact || mongoose.model("Contact",ContactSchema);
+/*export default mongoose.models.Contact || mongoose.model("Contact",ContactSchema);*/
+const contacts= mongoose.models.Contact || mongoose.model("contacts",ContactSchema);
+module.exports=contacts

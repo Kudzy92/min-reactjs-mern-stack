@@ -6,7 +6,7 @@ const ClientSchema = new mongoose.Schema({
         required:true,
         maxlength:6,
     },
-    name:{
+    fullname:{
         type:String,
         required:true,
         maxlength:60,
@@ -15,6 +15,11 @@ const ClientSchema = new mongoose.Schema({
         type:String,
         required:true,
         maxlength:200,
+    },
+    linkedcount:{
+        type:Number,
+        required:true,
+        maxlength:10,
     },
     
 },{ timestamps: true });

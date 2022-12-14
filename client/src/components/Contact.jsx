@@ -1,17 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import ContactGridCard from './ContactGridCard';
 import ContactList from './ContactList'
 import Loader from './Loader'
 import '../styles/Client.scss'
-import {FormatListNumbered,Apps, Add} from '@mui/icons-material/';
+import Axios from 'axios'
+import {FormatListNumbered,Apps, Add, Sync} from '@mui/icons-material/';
 import AddNewContact from './AddNewContact';
 
 const Contact = ({handleOverlay}) => {
   const [layout, setLayout]= useState("list");
   const [isnotOpenDialog, setIsNotOpenDialog]= useState(false);
   const [isLoading, setIsLoading]= useState(false);
-
+  const [isContactAddBtnLoading, setIsContactAddBtnLoading]= useState(false);
+  const [isContactListBtnLoading, setIsContactListBtnLoading]= useState(false);
+  const [isContactGridBtnLoading, setIsContactGridBtnLoading]= useState(false);
+  const [contacts, setContacts]= useState([]);
+  useEffect(()=>{
+    Axios.get(`http://localhost:3001/readcontact`).then((response)=>{
+      console.log(response);
+      setContacts(response.data);
+    });
+  }, []);
     
+    /*
     const contacts=[{
         id:1,
         name:"Kudzai",
@@ -47,40 +58,38 @@ const Contact = ({handleOverlay}) => {
         email:"fluter@gmail.com",
         linked_no:13,
     }
-]
+]  */
 const contacts_no=contacts.length;
 const handleOpenDialog=event=>{
-  setIsNotOpenDialog(!isnotOpenDialog);
+  setIsContactAddBtnLoading(!isContactAddBtnLoading);
+  setTimeout(()=>{
+    setIsNotOpenDialog(!isnotOpenDialog);
   handleOverlay(true);
+  setIsContactAddBtnLoading(isContactAddBtnLoading);
+    }, 2000);
+  
 }
-/*const timer=setTimeout(()=>{
-  setIsLoading(!isLoading);
-  }, 3000);
-   useEffect(()=>{
-    const timer=setTimeout(()=>{
-      setIsLoading(!isLoading);
-      }, 3000);
-      return ()=> {
-      clearTimeout(timer);  
-      setIsLoading(isLoading); 
-      }
-  },[]);
-  */
+
+
 
 const handleListLayoutAction=event=>{
   setLayout("list");
   setIsLoading(true);
+  setIsContactListBtnLoading(!isContactListBtnLoading);
   console.log("Loading"+isLoading);
   setTimeout(()=>{
     setIsLoading(false);
+    setIsContactListBtnLoading(isContactListBtnLoading);
     }, 3000);
 }
 const handleGridLayoutAction=event=>{
   setLayout("grid");
   setIsLoading(true);
+  setIsContactGridBtnLoading(!isContactGridBtnLoading);
   console.log("Loading"+isLoading);
 setTimeout(()=>{
     setIsLoading(false);
+    setIsContactGridBtnLoading(isContactGridBtnLoading);
     }, 3000);
     
   
@@ -93,21 +102,27 @@ setTimeout(()=>{
 {/*<ActionBtn data={client}/>*/}
 <div className='action-btn-container'>
       <div className="section-heading">
-    <h3>14 Contact</h3>
+    <h3>{contacts_no} Contact{contacts_no>2? 's':''}</h3>
   </div>
   <div className='section-action'>
-    <span className={layout==='list' ? 'action-btn active':'action-btn'} onClick={handleListLayoutAction}>
-      <FormatListNumbered />
+    <span className={layout==='list' ? (isContactListBtnLoading ? 'loading action-btn active' :'action-btn active') : 'action-btn'} onClick={handleListLayoutAction}>
+    {isContactListBtnLoading && <Sync /> }
+{!isContactListBtnLoading && <FormatListNumbered /> }
+      
     </span>
     {/*
     {"action-btn" + (layout==='list' ? 'active':'')}
      {"action-btn" + (layout==='grid' ? 'active':'')}
     */}
-    <span className={layout==='grid' ? 'action-btn active':'action-btn'} onClick={handleGridLayoutAction}>
-      <Apps />
+    <span className={layout==='grid' ? (isContactGridBtnLoading ? 'loading action-btn active' :'action-btn active') : 'action-btn'} onClick={handleGridLayoutAction}>
+    {isContactGridBtnLoading && <Sync /> }
+{!isContactGridBtnLoading && <Apps />}
+      
     </span>
-    <span className='action-btn' onClick={handleOpenDialog}>
-      <Add />
+    <span className={isContactAddBtnLoading ? 'loading action-btn': 'action-btn'} onClick={handleOpenDialog}>
+    {isContactAddBtnLoading && <Sync /> }
+{!isContactAddBtnLoading && <Add /> }
+      
     </span>
     </div>
     </div>
@@ -127,7 +142,7 @@ setTimeout(()=>{
 </tr>
 {contacts.map((client)=>{
         return (
-  <ContactList key={client.id} {...client} />
+  <ContactList key={client._id} {...client} />
 )})}
 </tbody>
   </table>
@@ -141,7 +156,7 @@ setTimeout(()=>{
     {contacts_no>0 ? <div className="grid-wrapper">
     {contacts.map((client)=>{
         return (
-  <ContactGridCard key={client.id} {...client} />
+  <ContactGridCard key={client._id} {...client} />
 )})}
       </div>:''}
       {!isLoading && contacts_no<1 ? 

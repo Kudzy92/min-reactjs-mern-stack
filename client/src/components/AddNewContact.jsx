@@ -1,5 +1,6 @@
 import { SaveAs, Clear, Sync } from '@mui/icons-material'
 import React, { useState } from 'react'
+import Axios from 'axios'
 /*import mongoose from  "mongose"*/
 
 
@@ -11,6 +12,12 @@ const AddNewContact = ({handleCloseDialog, handleOverlay}) => {
     const [isNameFocus,setIsNameFocus]=useState(false);
     const [isSaveBtnLoading,setIsSaveBtnLoading]=useState(false);
     const [isCancelBtnLoading,setIsCancelBtnLoading]=useState(false);
+    const [contactname,setContactName]=useState('');
+    const [contactsurname,setContactSurname]=useState('');
+    const [contactemail,setContactEmail]=useState('');
+    const [linkedItem,setLinkedItem]=useState([]);
+    const [contactlinkedcount,setContactlinkedcount]=useState(2);
+    const [contacts, setContacts]= useState([]);
     
    
     const handleFocusAndVadidationName = event => {
@@ -42,7 +49,7 @@ const AddNewContact = ({handleCloseDialog, handleOverlay}) => {
       const isNameValid =regex.test(String(value).toLowerCase());
             if(isNameValid){setIsNameValid(true);}else{setIsNameValid(false);}
       };
-      const contacts=[{
+      /*const contacts=[{
         id:1,
         name:"Kudzai",
         surname:"Madziva",
@@ -77,13 +84,12 @@ const AddNewContact = ({handleCloseDialog, handleOverlay}) => {
         email:"fluter@gmail.com",
         linked_no:13,
     }
-]
+]*/
 const contacts_no=contacts.length;
 const handleLinkedItemClick=event=>{
     event.currentTarget.classList.toggle("active");
 }
 const handleCancelClick=event=>{
-
 setIsCancelBtnLoading(!isCancelBtnLoading);
 setTimeout(()=>{
   handleCloseDialog(false);
@@ -94,24 +100,18 @@ handleOverlay(false);
 }
 const handleSaveClick=event=>{
   setIsSaveBtnLoading(!isSaveBtnLoading);
+  Axios.post(`http://localhost:3001/insertcontact`,{
+    name: contactname,
+    surname:contactsurname,
+    email:contactemail,
+    linkedcount:contactlinkedcount,
+  });
   setTimeout(()=>{
     handleCloseDialog(false);
   handleOverlay(false);
     setIsSaveBtnLoading(isSaveBtnLoading);
     }, 3000);
-   /* var MongoClient = require('mongodb').MongoClient;
-    var url = "mongodb://localhost:27017/";
-    
-    MongoClient.connect(url, function(err, db) {
-      if (err) throw err;
-      var dbo = db.db("mydb");
-      var myobj = { name: "Company Inc", address: "Highway 37" };
-      dbo.collection("customers").insertOne(myobj, function(err, res) {
-        if (err) throw err;
-        console.log("1 document inserted");
-        db.close();
-      });
-    });*/
+
 }
   return (
     <div  className='crud-dialog active'>
@@ -121,16 +121,16 @@ const handleSaveClick=event=>{
 <div className="title"><h1>Add New Contact</h1></div>
 <div className={isNameFocus ?(isNameValid ? 'form-control isvalid' : 'form-control isnotvalid') :'form-control' }>
 <label>Your name</label>
-<input type="text" id="name" onFocus={handleFocusAndVadidationName} onBlur={handleRemoveFocusAndValidateInputName} className="input-box" />
+<input type="text" id="name" onFocus={handleFocusAndVadidationName} onChange={(event)=>{setContactName(event.target.value);}} onBlur={handleRemoveFocusAndValidateInputName} className="input-box" />
 </div>
 <div className={isNameFocus ?(isNameValid ? 'form-control isvalid' : 'form-control isnotvalid') :'form-control' }>
 <label>Your surname</label>
-<input type="text" id="name" onFocus={handleFocusAndVadidationName} onBlur={handleRemoveFocusAndValidateInputName} className="input-box" />
+<input type="text" id="name" onFocus={handleFocusAndVadidationName}  onChange={(event)=>{setContactSurname(event.target.value);}} onBlur={handleRemoveFocusAndValidateInputName} className="input-box" />
 </div>
 
 <div className={isEmailFocus ?(isEmailValid ? 'form-control isvalid' : 'form-control isnotvalid') :'form-control' }>
 <label>Your Email Address</label>
-<input type="email" id="email" onFocus={handleFocusAndVadidationEmail} onBlur={handleRemoveFocusAndValidateInputEmail} className="input-box"/>
+<input type="email" id="email" onFocus={handleFocusAndVadidationEmail} onChange={(event)=>{setContactEmail(event.target.value);}} onBlur={handleRemoveFocusAndValidateInputEmail} className="input-box"/>
 </div>
 
 <div className='link-contact-list-wrapper'>

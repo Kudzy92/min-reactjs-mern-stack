@@ -1,7 +1,8 @@
-import  React, { useState } from 'react'
+import  React, { useState, useEffect } from 'react'
 import Client from './Client'
 import Contact from './Contact'
 import Loader from './Loader'
+import Axios from 'axios'
 import { Group, Contacts, Sync } from '@mui/icons-material'
 import '../styles/TabNavigation.scss'
 const TabNavigation = () => {
@@ -10,6 +11,18 @@ const TabNavigation = () => {
     const [isOverlay, setOverlay]= useState(false);
     const [isClientsBtnLoading,setIsClientsBtnLoading]=useState(false);
     const [isContactsBtnLoading,setIsContactsBtnLoading]=useState(false);
+    const [clients, setClients]= useState([]);
+    const [contacts, setContacts]= useState([]);
+  useEffect(()=>{
+    Axios.get(`http://localhost:3001/read`).then((response)=>{
+      console.log(response);
+      setClients(response.data);
+    });
+    Axios.get(`http://localhost:3001/readcontact`).then((response)=>{
+      console.log(response);
+      setContacts(response.data);
+    });
+  }, []);
     const handleClientTab = () => {
         setActiveTab("client");
         setIsLoading(true);
@@ -38,15 +51,15 @@ const TabNavigation = () => {
       <ul className="nav">
         <li className={activeTab === "client" && isClientsBtnLoading ? "active loading" : !isClientsBtnLoading && !isContactsBtnLoading && activeTab === 'client' ? "active" : ''} onClick={handleClientTab}>
           {isClientsBtnLoading && <Sync />}
-          {isClientsBtnLoading && 'Clients Loading..'}
+          {isClientsBtnLoading && 'Client'+((clients.length>2)? 's' :'')+' Loading..'}
           {!isClientsBtnLoading && <Group />}
-          {!isClientsBtnLoading && 'Clients'}
+          {!isClientsBtnLoading && 'Client'+((clients.length>2)? 's' :'')}
           </li>
         <li className={activeTab === "contact" && isContactsBtnLoading ? "active loading" : activeTab === "contact" && !isContactsBtnLoading && !isClientsBtnLoading ? "active" : ''} onClick={handleContactTab}>
         {isContactsBtnLoading && <Sync />}
-          {isContactsBtnLoading && 'Contacts Loading..'}
+          {isContactsBtnLoading && 'Contact'+((contacts.length>2)? 's' :'')+' Loading..' }
           {!isContactsBtnLoading && <Contacts />}
-          {!isContactsBtnLoading && 'Contacts'}
+          {!isContactsBtnLoading && 'Contact'+((contacts.length>2)? 's' :'')}
         </li>
       </ul>
       <div className="outlet">

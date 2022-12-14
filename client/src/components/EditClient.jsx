@@ -1,9 +1,11 @@
 import { SaveAs, Clear, Sync } from '@mui/icons-material'
-import React, { useState } from 'react'
-/*import mongoose from  "mongose"*/
+import React, { useState ,useEffect} from 'react'
+import Axios from 'axios'
 import '../styles/AddNewClient.scss'
+/*import mongoose from  "mongose"*/
 
-const EditClient = ({handleCloseDialog,handleOverlay}) => {
+const EditClient = ({handleCloseDialog,handleOverlay,editDialogId}) => {
+  console.log("EDIT ID"+editDialogId);
   const [isEmailValid,setIsEmailValid]=useState(false);
   const [isNameValid,setIsNameValid]=useState(false);
   const [isEmailFocus,setIsEmailFocus]=useState(false);
@@ -11,6 +13,13 @@ const EditClient = ({handleCloseDialog,handleOverlay}) => {
   const [isBtnLoading,setIsBtnLoading]=useState(false);
   const [isCancelBtnLoading,setIsCancelBtnLoading]=useState(false);
  
+  const [clients, setClients]= useState([]);
+  useEffect(()=>{
+    Axios.get(`http://localhost:3001/readclientby`).then((response)=>{
+      console.log(response);
+      setClients(response.data);
+    });
+  }, []);
   const handleFocusAndVadidationName = event => {
       console.log("Handle focus");
       setIsNameFocus(true);
@@ -101,19 +110,6 @@ handleCloseDialog(false);
 handleOverlay(false);
 setIsBtnLoading(isBtnLoading);
 }, 3000);
- /* var MongoClient = require('mongodb').MongoClient;
-  var url = "mongodb://localhost:27017/";
-  
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    var dbo = db.db("mydb");
-    var myobj = { name: "Company Inc", address: "Highway 37" };
-    dbo.collection("customers").insertOne(myobj, function(err, res) {
-      if (err) throw err;
-      console.log("1 document inserted");
-      db.close();
-    });
-  });*/
 }
 return (
   <div  className='crud-dialog active'>
