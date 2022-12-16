@@ -1,16 +1,20 @@
 import './App.css';
-import TabNavigation from './components/TabNavigation';
-import SectionHeading from './components/SectionHeading';
-import Footer from './components/Footer';
+
+import Content from './components/Content';
+import Loader from './components/Loader'
+import { useState } from 'react'
+
 function App() {
+  const [isPageLoading, setIsPageLoading]=useState(true);
+  const content= !isPageLoading ? <Content /> : <Loader />;
+  //var content=<Content />;
+  setTimeout(()=>{
+    setIsPageLoading(false);
+    }, 3000);
+    //clearTimeout(timer);
   return (
     <main className="App">
-      <div className="container">
-        <SectionHeading />
-      <TabNavigation />
-      
-      </div>
-      <Footer />
+      {content}
     </main>
   );
 }

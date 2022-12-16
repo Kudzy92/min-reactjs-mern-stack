@@ -5,7 +5,11 @@ import Loader from './Loader'
 import Axios from 'axios'
 import { Group, Contacts, Sync } from '@mui/icons-material'
 import '../styles/TabNavigation.scss'
+
 const TabNavigation = () => {
+ /* const [isShowNotificationDialog,setIsShowNotificationDialog]=useState(false);
+  const [notType, setNotType] = useState("");
+  const [notMsg, setNotMsg] = useState("");*/
     const [activeTab, setActiveTab] = useState("client");
     const [isLoading, setIsLoading]= useState(false);
     const [isOverlay, setOverlay]= useState(false);
@@ -43,9 +47,13 @@ const TabNavigation = () => {
           setIsContactsBtnLoading(isClientsBtnLoading);
           }, 3000);
       };
+    
+     
+     
   return (
     <>
     { isOverlay && <div className="overlay active"></div>}
+    { /*isShowNotificationDialog && <NotificationCard handleNotiType={setNotType} handleMsg={setNotType} />*/}
     <div className="tabs">
      
       <ul className="nav">
@@ -64,8 +72,8 @@ const TabNavigation = () => {
       </ul>
       <div className="outlet">
       {isLoading && <Loader />}
-      {!isLoading && activeTab === "client" ? <Client handleOverlay={setOverlay} /> : ''}
-      {!isLoading && activeTab === "contact" ? <Contact handleOverlay={setOverlay}/> : ''}
+      {!isLoading && activeTab === "client" ? <Client handleOverlay={setOverlay}  /> : ''}
+      {!isLoading && activeTab === "contact" ? <Contact handleOverlay={setOverlay} /> : ''}
       </div>
     </div>
     </>

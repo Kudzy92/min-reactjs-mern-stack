@@ -7,13 +7,16 @@ import Axios from 'axios'
 import {FormatListNumbered,Apps, Add, Sync} from '@mui/icons-material/';
 import AddNewContact from './AddNewContact';
 
-const Contact = ({handleOverlay}) => {
+const Contact = ({handleOverlay,handleNotificationDialog,handleNotiType,handleMsg}) => {
   const [layout, setLayout]= useState("list");
   const [isnotOpenDialog, setIsNotOpenDialog]= useState(false);
   const [isLoading, setIsLoading]= useState(false);
   const [isContactAddBtnLoading, setIsContactAddBtnLoading]= useState(false);
   const [isContactListBtnLoading, setIsContactListBtnLoading]= useState(false);
   const [isContactGridBtnLoading, setIsContactGridBtnLoading]= useState(false);
+  
+  //const [notType, setNotType] = useState("");
+  //const [notMsg, setNotMsg] = useState("");
   const [contacts, setContacts]= useState([]);
   useEffect(()=>{
     Axios.get(`http://localhost:3001/readcontact`).then((response)=>{
@@ -96,7 +99,7 @@ setTimeout(()=>{
 }
   return (
     <div className='client-container'>
-      { isnotOpenDialog && <AddNewContact  handleCloseDialog={setIsNotOpenDialog} handleOverlay={handleOverlay} /> }
+      { isnotOpenDialog && <AddNewContact  handleCloseDialog={setIsNotOpenDialog} handleOverlay={handleOverlay} handleNotificationDialog={handleNotificationDialog} handleNotiType={handleNotiType} handleMsg={handleMsg} /> }
 <div className='client-action-container'>
   
 {/*<ActionBtn data={client}/>*/}

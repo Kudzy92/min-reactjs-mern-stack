@@ -8,66 +8,33 @@ import {FormatListNumbered,Apps, Add, Sync} from '@mui/icons-material/';
 import AddNewClient from './AddNewClient';
 import EditClient from './EditClient'
 
-const Client = ({handleOverlay}) => {
-  const [editId, setEditId]= useState('');
+
+const Client = ({handleOverlay,handleNotificationDialog,handleNotiType,handleMsg}) => {
   const [layout, setLayout]= useState("list");
-  const [isnotOpenDialog, setIsNotOpenDialog]= useState(false);
-  const [isnotOpenEditDialog, setIsNotOpenEditDialog]= useState(false);
+  const [isOpenEditDialog, setIsOpenEditDialog]= useState(false);
+  const [isOpenAddDialog, setIsOpenAddDialog]= useState(false);
   const [isLoading, setIsLoading]= useState(false);
   const [isClientAddBtnLoading, setIsClientAddBtnLoading]= useState(false);
   const [isClientListBtnLoading, setIsClientListBtnLoading]= useState(false);
   const [isClientGridBtnLoading, setIsClientGridBtnLoading]= useState(false);
+  
   const [clients, setClients]= useState([]);
   useEffect(()=>{
     Axios.get(`http://localhost:3001/read`).then((response)=>{
       console.log(response);
       setClients(response.data);
     });
+     
   }, []);
     
-    /*const clients=[{
-        id:1,
-        code:"KUD001",
-        name:"Kudzai",
-        email:"kudziemadziva@gmail.com",
-        linked_no:3,
-    },
-    {
-        id:2,
-        code:"JAV002",
-        name:"Java",
-        email:"java@gmail.com",
-        linked_no:3,
-    },
-    {
-        id:3,
-        code:"REA003",
-        name:"React",
-        email:"react@react.co.za",
-        linked_no:3,
-    },
-    {
-        id:5,
-        code:"PHP004",
-        name:"Php",
-        email:"php@yahoo.com",
-        linked_no:5,
-    },
-    {
-        id:6,
-        code:"FLU006",
-        name:"Fluter",
-        email:"fluter@gmail.com",
-        linked_no:13,
-    }
-]*/
+    
 const clients_no=clients.length;
 const handleOpenDialog=event=>{
   
   setIsClientAddBtnLoading(!isClientAddBtnLoading);
   setTimeout(()=>{
     handleOverlay(true);
-  setIsNotOpenDialog(!isnotOpenDialog);
+  setIsOpenAddDialog(!isOpenAddDialog);
   setIsClientAddBtnLoading(isClientAddBtnLoading);
 }, 2000);
 }
@@ -107,13 +74,19 @@ const handleGridLayoutAction=event=>{
     }, 3000);
     //clearTimeout(timer); 
   
+    
 }
+const clientProps={clients},
+    notiProps={handleNotificationDialog,handleNotiType, handleMsg },
+    dataEditDialogProps={setIsOpenEditDialog,handleOverlay};
+    
   return (
     
     <div className='client-container'>
+       
+      { isOpenAddDialog && <AddNewClient  handleCloseDialog={setIsOpenAddDialog} handleOverlay={handleOverlay} handleNotificationDialog={handleNotificationDialog} handleNotiType={handleNotiType} handleMsg={handleMsg} /> }
+      { isOpenEditDialog && <EditClient clientProps={clientProps} dataEditDialogProps={dataEditDialogProps} notiProps={notiProps}  /> }
       
-      { isnotOpenDialog && <AddNewClient  handleCloseDialog={setIsNotOpenDialog} handleOverlay={handleOverlay} /> }
-      { isnotOpenEditDialog && <EditClient  handleCloseDialog={setIsNotOpenEditDialog} editDialogId={setEditId} handleOverlay={handleOverlay} /> }
 <div className='client-action-container'>
   
 {/*<ActionBtn data={client}/>*/}
@@ -159,7 +132,14 @@ const handleGridLayoutAction=event=>{
 </tr>
 {clients.map((client)=>{
         return (
-  <ClientList key={client._id} editDialogId={setEditId} {...client} />
+          
+    /* dataProps={clientProps}
+  notiDataProps={notiProps} 
+  dataEditDialogProps={dataEditDialogProps}*/      
+  <ClientList 
+  key={client._id} 
+ {...client}
+  />
 )})}
 </tbody>
   </table>
@@ -173,7 +153,7 @@ const handleGridLayoutAction=event=>{
     {!isLoading && clients_no>0 ? <div className="grid-wrapper">
     {clients.map((client)=>{
         return (
-  <ClientGridCard key={client._id} editDialogId={setEditId} {...client} />
+  <ClientGridCard key={client._id}  {...client}  />
 )})}
       </div>: ''}
       {!isLoading && clients_no<1 ?

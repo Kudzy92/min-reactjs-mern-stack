@@ -1,9 +1,13 @@
 import { SaveAs, Clear, Sync } from '@mui/icons-material'
 import React, { useState, useEffect } from 'react'
+import {toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 /*import mongoose from  "mongose"*/
 import '../styles/AddNewClient.scss'
 import Axios from 'axios'
-const AddNewClient = ({handleCloseDialog,handleOverlay}) => {
+
+//toast.configure();
+const AddNewClient = ({handleCloseDialog,handleOverlay,handleNotificationDialog,handleNotiType,handleMsg}) => {
   
     const [isEmailValid,setIsEmailValid]=useState(false);
     const [isNameValid,setIsNameValid]=useState(false);
@@ -11,17 +15,25 @@ const AddNewClient = ({handleCloseDialog,handleOverlay}) => {
     const [isNameFocus,setIsNameFocus]=useState(false);
     const [isBtnLoading,setIsBtnLoading]=useState(false);
     const [isCancelBtnLoading,setIsCancelBtnLoading]=useState(false);
-    const [code,setCode]=useState('KUD002');
+    const [code,setCode]=useState('');
     const [fullname,setFullname]=useState('');
     const [email,setEmail]=useState('');
     const [linkedcount,setLinkedcount]=useState(4);
     const [clients, setClients]= useState([]);
+    const [contacts, setContacts]= useState([]);
   useEffect(()=>{
     Axios.get(`http://localhost:3001/read`).then((response)=>{
       console.log(response);
       setClients(response.data);
     });
+    
+   
+    Axios.get(`http://localhost:3001/readcontact`).then((response)=>{
+      console.log(response);
+      setContacts(response.data);
+    });
   }, []);
+ 
     const handleFocusAndVadidationName = event => {
         console.log("Handle focus");
         setIsNameFocus(true);
@@ -51,42 +63,7 @@ const AddNewClient = ({handleCloseDialog,handleOverlay}) => {
       const isNameValid =regex.test(String(value).toLowerCase());
             if(isNameValid){setIsNameValid(true);}else{setIsNameValid(false);}
       };
-      const contacts=[{
-        id:1,
-        name:"Kudzai",
-        surname:"Madziva",
-        email:"kudziemadziva@gmail.com",
-        linked_no:3,
-    },
-    {
-        id:2,
-        name:"Java",
-        surname:"OOP",
-        email:"java@gmail.com",
-        linked_no:3,
-    },
-    {
-        id:3,
-        name:"React",
-        surname:"JS",
-        email:"react@react.co.za",
-        linked_no:3,
-    },
-    {
-        id:5,
-        name:"Php",
-        surname:"Python",
-        email:"php@yahoo.com",
-        linked_no:5,
-    },
-    {
-        id:6,
-        name:"Fluter",
-        surname:"Google",
-        email:"fluter@gmail.com",
-        linked_no:13,
-    }
-]
+    
 const contacts_no=contacts.length;
 const handleLinkedItemClick=event=>{
     event.currentTarget.classList.toggle("active");
@@ -100,14 +77,22 @@ handleOverlay(false);
   setIsCancelBtnLoading(isCancelBtnLoading);
   }, 2000);
 }
+
 function genertateCode(fn,clients){
   
  var partone='',
  parttwo='',
   str='',
   fullname=fn.replace(/ /g, ''),
-  len=clients.length;
-  console.log("Data"+fullname+'LEN'+len+"FULLNAME LEN"+fullname.length);
+  len=clients.length,
+  characters='ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+  strone='';
+  //partone=Math.random().toString(36).slice(2,5);
+  for(var i=0; i<3;i++){
+  strone+=characters.charAt(Math.floor(Math.random()* characters.length));
+  }
+  partone=strone;
+  console.log("Data"+fullname+'LEN'+len+"FULLNAME LEN"+fullname.length+'partone'+partone);
   if(fullname.length>2){partone=fullname.substring(0,3);}else{partone=Math.random().toString(36).slice(2,5);}
   var str_len=len.toString();
 if(len<10 ){ 
@@ -119,13 +104,17 @@ if(len<10 ){
 }
 
 str=partone+parttwo;
-console.log("PART1"+partone+"PARTTWO"+parttwo+"STR"+str);
+
+console.log("PART1"+partone+"PARTTWO"+parttwo+"STR"+str+"CODE"+code);
 return str;
 }
 const handleSaveClick=event=>{
   setIsBtnLoading(!isBtnLoading);
-  console.log("Code"+code+"Fullname"+fullname+"email"+email+"CODE"+genertateCode(fullname,clients));
   setCode(genertateCode(fullname,clients));
+  setLinkedcount(2);
+  console.log("Code"+code+"Fullname"+fullname+"email"+email+"CODE"+genertateCode(fullname,clients)+"lenth"+clients.length);
+  if(code !=='' && fullname!=='' && email !==''){
+   
   Axios.post(`http://localhost:3001/insert`,{
     code: code,
     fullname:fullname,
@@ -138,6 +127,18 @@ setTimeout(()=>{
 handleOverlay(false);
   setIsBtnLoading(isBtnLoading);
   }, 3000);
+  toast.success('Empty fields ! Please fill all field(s).',
+    {position: toast.POSITION.BOTTOM_RIGHT})
+  }else{
+    //show dialog
+    toast.error('Empty fields ! Please fill all field(s).',
+    {position: toast.POSITION.BOTTOM_RIGHT})
+    setTimeout(()=>{
+      
+      setIsBtnLoading(isBtnLoading);
+      }, 3000);
+  }
+  
 }
 
   return (
@@ -156,14 +157,14 @@ handleOverlay(false);
 <input type="email" id="email" onFocus={handleFocusAndVadidationEmail}  onChange={(event)=>{setEmail(event.target.value);}} onBlur={handleRemoveFocusAndValidateInputEmail} className="input-box"/>
 </div>
 
-<div className='link-contact-list-wrapper'>
-<label>Link contacts</label>
+<div className='link-contact-list-wrapper' >
+<label>{contacts_no>2 ? 'Link contacts' :'Link contact' }</label>
 {contacts_no>0 ? 
-<ul className='link-contact-list'>
+<ul className={'link-contact-list'+(contacts_no<5 ? ' auto' :'')}>
 
-{contacts.map((contact)=>{
+{contacts.map((contact,i)=>{
     return(
-<li key={contact.id}><span className='link-item' onClick={handleLinkedItemClick} data-contact-id={contact.id}>{contact.name+' '+contact.surname}</span></li>
+<li key={i}><span className='link-item' onClick={handleLinkedItemClick} data-contact-id={contact.id}>{contact.name+' '+contact.surname}</span></li>
     )
 })}
 </ul>

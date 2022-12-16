@@ -1,5 +1,5 @@
 import { SaveAs, Clear, Sync } from '@mui/icons-material'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Axios from 'axios'
 /*import mongoose from  "mongose"*/
 
@@ -15,11 +15,18 @@ const AddNewContact = ({handleCloseDialog, handleOverlay}) => {
     const [contactname,setContactName]=useState('');
     const [contactsurname,setContactSurname]=useState('');
     const [contactemail,setContactEmail]=useState('');
-    const [linkedItem,setLinkedItem]=useState([]);
+ 
     const [contactlinkedcount,setContactlinkedcount]=useState(2);
-    const [contacts, setContacts]= useState([]);
-    
+  
+    const [clients, setClients]= useState([]);
    
+    useEffect(()=>{
+  
+      Axios.get(`http://localhost:3001/read`).then((response)=>{
+        console.log(response);
+        setClients(response.data);
+      });
+    }, []);
     const handleFocusAndVadidationName = event => {
         console.log("Handle focus");
         setIsNameFocus(true);
@@ -49,43 +56,8 @@ const AddNewContact = ({handleCloseDialog, handleOverlay}) => {
       const isNameValid =regex.test(String(value).toLowerCase());
             if(isNameValid){setIsNameValid(true);}else{setIsNameValid(false);}
       };
-      /*const contacts=[{
-        id:1,
-        name:"Kudzai",
-        surname:"Madziva",
-        email:"kudziemadziva@gmail.com",
-        linked_no:3,
-    },
-    {
-        id:2,
-        name:"Java",
-        surname:"OOP",
-        email:"java@gmail.com",
-        linked_no:3,
-    },
-    {
-        id:3,
-        name:"React",
-        surname:"JS",
-        email:"react@react.co.za",
-        linked_no:3,
-    },
-    {
-        id:5,
-        name:"Php",
-        surname:"Python",
-        email:"php@yahoo.com",
-        linked_no:5,
-    },
-    {
-        id:6,
-        name:"Fluter",
-        surname:"Google",
-        email:"fluter@gmail.com",
-        linked_no:13,
-    }
-]*/
-const contacts_no=contacts.length;
+     
+const clients_no=clients.length;
 const handleLinkedItemClick=event=>{
     event.currentTarget.classList.toggle("active");
 }
@@ -100,6 +72,7 @@ handleOverlay(false);
 }
 const handleSaveClick=event=>{
   setIsSaveBtnLoading(!isSaveBtnLoading);
+  setContactlinkedcount(3);
   Axios.post(`http://localhost:3001/insertcontact`,{
     name: contactname,
     surname:contactsurname,
@@ -113,6 +86,7 @@ const handleSaveClick=event=>{
     }, 3000);
 
 }
+
   return (
     <div  className='crud-dialog active'>
         
@@ -134,13 +108,13 @@ const handleSaveClick=event=>{
 </div>
 
 <div className='link-contact-list-wrapper'>
-<label>Link contacts</label>
-{contacts_no>0 ? 
-<ul className='link-contact-list'>
+<label>{clients_no>2 ? 'Link clients' :'Link client' }</label>
+{clients_no>0 ? 
+<ul className={'link-contact-list'+(clients_no<5 ? ' auto' :'')}>
 
-{contacts.map((contact)=>{
+{clients.map((client)=>{
     return(
-<li key={contact.id}><span className='link-item' onClick={handleLinkedItemClick} data-contact-id={contact.id}>{contact.name+' '+contact.surname}</span></li>
+<li key={client._id}><span className='link-item' onClick={handleLinkedItemClick} data-contact-id={client._id}>{client.fullname}</span></li>
     )
 })}
 </ul>

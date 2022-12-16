@@ -1,6 +1,7 @@
 const express=require("express");
 const mongoose=require("mongoose");
 const cors=require("cors");
+const LinkedModel=require("./model/Linked");
 const ClientModel=require("./model/Client");
 const ContactModel=require("./model/Contact");
 const { default: Contact } = require("./model/Contact");
@@ -86,6 +87,23 @@ res.send("Contact Data successfully inserted!");
         res.send(result);
         })
         });
+        app.get("/readallinked", async(req,res)=>{
+            LinkedModel.find({},(err,result)=>{
+            if(err){
+                res.send(err);//id there is error send(err) will terminate and send an error
+            }
+            result.data.map((item)=>{
+            const clid=item.clientid;
+            const coid=item.contactid;
+            app.get(`http:localhost:3001/selectedcontact:id`, (req, res)=>{
+                const data=res.data;
+                console.log(data);
+                res.send(data);
+            });
+            });
+            res.send(result);
+            })
+            });
         app.get("/readclientby", async(req,res)=>{
             const id=req.body._id;
             ClientModel.find({$where:{_id:id}},(err,result)=>{
@@ -110,22 +128,23 @@ res.send("Contact Data successfully inserted!");
             await ClientModel.findById(id,(err,updatedFood)=>{
                 updatedFood.foodname=newFoodname;
                 updatedFood.save();
-                res.send("Data sucessfully sent")
+                res.send("Data sucessfully sent");
             });
            
             }catch(error){
                 console.log("Mongo Error"+error);
             }
             });
-            app.delete("/delete/id", async(req,res)=>{
-                
-                try{
-                await client.save();
-                res.send("Data successfully inserted!");
-                }catch(error){
-                    console.log("Mongo Error"+error);
-                }
+            app.delete("/delete/:id", async(req,res)=>{
+                const id=req.params.id;
+                await ClientModel.findByIdAndRemove(id).exec();
+                res.send("deleted")
                 });
+                app.delete("/deletecontact/:id", async(req,res)=>{
+                    const id=req.params.id;
+                    await ContactModel.findByIdAndRemove(id).exec();
+                    res.send("deleted contact")
+                    });
 app.listen(3001, ()=> {
     console.log("Sever runing at port 3001");
 });

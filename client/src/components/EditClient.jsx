@@ -82,14 +82,7 @@ const EditClient = ({handleCloseDialog,handleOverlay,editDialogId}) => {
       linked_no:13,
   }
 ]
-const client=[{
-  id:1,
-  code:"KUD001",
-  name:"Kudzai",
-  email:"kudziemadziva@gmail.com",
-  linked_no:3,
-},
-]
+
 const contacts_no=contacts.length;
 const handleLinkedItemClick=event=>{
   event.currentTarget.classList.toggle("active");
@@ -116,15 +109,15 @@ return (
       
 
   <div  className="crud-dialog-wrapper">
-<div className="title"><h1>Edit {client.name}</h1></div>
+<div className="title"><h1>Edit {clients.name}</h1></div>
 <div className={isNameFocus ?(isNameValid ? 'form-control isvalid' : 'form-control isnotvalid') :'form-control' }>
 <label>Your Full Name</label>
-<input type="text" id="name" onFocus={handleFocusAndVadidationName} value={client.name} onBlur={handleRemoveFocusAndValidateInputName} className="input-box" />
+<input type="text" id="name" onFocus={handleFocusAndVadidationName} value={clients.name} onBlur={handleRemoveFocusAndValidateInputName} className="input-box" />
 </div>
 
 <div className={isEmailFocus ?(isEmailValid ? 'form-control isvalid' : 'form-control isnotvalid') :'form-control' }>
 <label>Your Email Address</label>
-<input type="email" id="email" onFocus={handleFocusAndVadidationEmail}  value={client.email}  onBlur={handleRemoveFocusAndValidateInputEmail} className="input-box"/>
+<input type="email" id="email" onFocus={handleFocusAndVadidationEmail}  value={setClients.email}  onBlur={handleRemoveFocusAndValidateInputEmail} className="input-box"/>
 </div>
 
 <div className='link-contact-list-wrapper'>

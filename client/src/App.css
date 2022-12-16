@@ -473,6 +473,10 @@ color:var(--white);
         height: 18rem;
       overflow-y: scroll;
   }
+  .link-contact-list.auto{
+    height: auto;
+    overflow: hidden;
+  }
   .link-contact-list::-webkit-scrollbar {
     width: 0.4rem;
   }

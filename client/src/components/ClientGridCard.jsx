@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {Edit, DeleteForever} from '@mui/icons-material'
 
 const ClientGridCard = (props) => {
+ 
   return (
     <div className="client-item">
 <div className="row"><span>Code :</span><span>{props.code}</span></div>

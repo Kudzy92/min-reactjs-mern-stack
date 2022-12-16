@@ -1,0 +1,49 @@
+.notification-card{
+    position: absolute;
+    top:5rem;
+    right:2rem;
+    height:6rem;
+    
+
+    .noti-inner-wrapper{
+        padding: 1rem 3.5rem;
+        position: relative;
+
+        &::before{
+         content:'';
+         position: absolute;
+         top:0;
+         left:0;
+         width:2rem;
+         height:100%;
+        }
+      
+        &::after{
+            content: '';
+            position: absolute;
+           right: 2rem;
+            font-size: 4rem;
+             top: 0;
+              bottom: 0;
+              margin:auto;
+        }
+        p{
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            color:var(--black-80);
+        }
+    }
+}
+.notification-card.error .noti-inner-wrapper::after{
+    content: '\2A09';
+    color: var(--theme-color-1);
+}
+.notification-card.sucess .noti-inner-wrapper::after{
+    content: '\2713';
+    color: var(--green);
+}
+.notification-card.info .noti-inner-wrapper::after{
+    content: '\f05a';
+    color: var(--black);
+}
