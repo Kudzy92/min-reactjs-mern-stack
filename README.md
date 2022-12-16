@@ -13,8 +13,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 In the project directory, you can run:
 
 ### `Run front end`
-cd client.\
-npm start.\
+cd client\
+npm start\
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
@@ -22,8 +22,8 @@ The page will reload when you make changes.\
 You may also see any lint errors in the console.
 
 ### `Run backend end`
-cd server.\
-npm run devStart.\
+cd server\
+npm run devStart
 
 ### `npm test`
 
