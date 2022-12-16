@@ -2,7 +2,7 @@
 Mini crud function project that showcase the Mysql database functions using ReactJS, HTML, CSS, SASS, Javascript and MongoDB, NodeJS
 
 # Who created this project
-This projected was created by Kudzai madziva (+27 810 405 0806) using React Framework.
+This projected was created by Kudzai madziva using React Framework.
 
 # Getting Started with Create React App
 
