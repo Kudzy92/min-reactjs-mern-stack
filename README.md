@@ -7,6 +7,8 @@ This projected was created by Kudzai madziva (+27 810 405 0806) using React Fram
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Project preview
+Open [https://min-reactjs-mern-stack.vercel.app/](https://min-reactjs-mern-stack.vercel.app/) to view it in your browser.
 
 ## Available Scripts
 
