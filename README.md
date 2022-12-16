@@ -7,4 +7,5 @@ cd client
 npm start
 
 run the server side
+cd server
 npm run devStart
